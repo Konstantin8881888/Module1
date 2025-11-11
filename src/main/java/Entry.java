@@ -1,5 +1,4 @@
 //Простая структура для хранения пары ключ-значение.
-package org.klimtsov.module1;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

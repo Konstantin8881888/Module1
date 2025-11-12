@@ -7,7 +7,7 @@ import java.util.*;
 @Getter
 public class CustomHashMap<K, V> {
     //Используем список бакетов.
-    private final List<LinkedList<Entry<K, V>>> table;
+    private List<LinkedList<Entry<K, V>>> table;
     private int capacity = 16;
     private int size = 0;
     private float loadFactor = 0.75f;
@@ -26,6 +26,9 @@ public class CustomHashMap<K, V> {
     }
 
     public V put(K key, V value) {
+        if (size >= capacity * loadFactor) {
+            resize();
+        }
         int idx = indexFor(key);
         LinkedList<Entry<K,V>> bucket = table.get(idx);
 
@@ -41,6 +44,23 @@ public class CustomHashMap<K, V> {
         bucket.addFirst(new Entry<K, V>(key, value));
         size++;
         return null;
+    }
+
+    private void resize() {
+        capacity *= 2;
+        List<LinkedList<Entry<K, V>>> newTable = new ArrayList<>(capacity);
+        for (int i = 0; i < capacity; i++) {
+            newTable.add(new LinkedList<>());
+        }
+
+        // Перехеширование всех элементов
+        for (LinkedList<Entry<K, V>> bucket : table) {
+            for (Entry<K, V> entry : bucket) {
+                int newIndex = indexFor(entry.getKey());
+                newTable.get(newIndex).add(entry);
+            }
+        }
+        table = newTable;
     }
 
     public V get(K key) {
@@ -73,7 +93,14 @@ public class CustomHashMap<K, V> {
     }
 
     public boolean containsKey(K key) {
-        return get(key) != null;
+        int idx = indexFor(key);
+        LinkedList<Entry<K,V>> bucket = table.get(idx);
+        for (Entry<K,V> e : bucket) {
+            if (Objects.equals(key, e.getKey())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isEmpty() {

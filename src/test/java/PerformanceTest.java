@@ -25,7 +25,7 @@ public class PerformanceTest {
         CustomHashMap<String, Integer> map = new CustomHashMap<>();
 
         //Добавляем много элементов.
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             map.put("key" + i, i);
         }
 
@@ -39,6 +39,6 @@ public class PerformanceTest {
         assertEquals(110, map.get("key10"));
         assertEquals(149, map.get("key49"));
         assertEquals(25, map.get("key25")); //Не меняли
-        assertEquals(50, map.getSize());
+        assertEquals(100, map.getSize());
     }
 }

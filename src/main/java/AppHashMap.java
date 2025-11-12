@@ -1,42 +1,56 @@
-import java.util.Random;
+import java.util.HashMap;
 
 public class AppHashMap {
     public static void main(String[] args) {
-        CustomHashMap<String, Integer> map = new CustomHashMap<>();
+        int n = 100000;
+        System.out.println("Выполняется замер производительности...");
 
-        //Простой пример работы (аналог есть в тестах, но здесь оставлено, чтобы можно было убедиться в работе main-класса.
-        map.put("one", 1);
-        map.put("two", 2);
-        map.put("three", 3);
-
-        System.out.println("Размер: " + map.getSize());
-        System.out.println("Первое значение: " + map.get("one"));
-        System.out.println("Второе значение: " + map.get("two"));
-
-        //Пример с вычислением времени (специально на случайных числах, для большей реалистичности).
-        Random random = new Random();
-        int elementCount = 100000;
-
-        //Замер времени для массового добавления случайных элементов.
+        System.out.println("Сравнение времени работы для CustomHashMap");
+        CustomHashMap<Integer, String> customMap = new CustomHashMap<>();
         long startTime = System.nanoTime();
-
-        CustomHashMap<Integer, String> largeMap = new CustomHashMap<>();
-        int[] randomKeys = new int[elementCount];
-
-        //Генерируем случайные ключи.
-        for (int i = 0; i < elementCount; i++) {
-            randomKeys[i] = random.nextInt(elementCount);
+        for (int i = 0; i < n; i++) {
+            customMap.put(i, "Value" + i);
         }
-
-        // Добавляем элементы со случайными ключами.
-        for (int i = 0; i < elementCount; i++) {
-            largeMap.put(randomKeys[i], "Value " + randomKeys[i]);
-        }
-
         long endTime = System.nanoTime();
-        long duration = (endTime - startTime)/1000000;
+        System.out.println("CustomHashMap время выполнения put: " + (endTime - startTime) + " нс.");
 
-        System.out.println("Добавление " + elementCount + " случайных элементов: " + duration + " мс");
-        System.out.println("Размер большой мапы: " + largeMap.getSize());
+        startTime = System.nanoTime();
+        for (int i = 0; i < n; i++) {
+            customMap.get(i);
+        }
+        endTime = System.nanoTime();
+        System.out.println("CustomHashMap время выполнения get: " + (endTime - startTime) + " нс.");
+
+        startTime = System.nanoTime();
+        for (int i = 0; i < n; i++) {
+            customMap.remove(i);
+        }
+        endTime = System.nanoTime();
+        System.out.println("CustomHashMap время выполнения remove: " + (endTime - startTime) + " нс.");
+
+        System.out.println("Сравнение времени работы для стандартного HashMap");
+        HashMap<Integer, String> hashMap = new HashMap<>();
+        startTime = System.nanoTime();
+        for (int i = 0; i < n; i++) {
+            hashMap.put(i, "Value" + i);
+        }
+        endTime = System.nanoTime();
+        System.out.println("HashMap время выполнения put: " + (endTime - startTime) + " нс.");
+
+        startTime = System.nanoTime();
+        for (int i = 0; i < n; i++) {
+            hashMap.get(i);
+        }
+        endTime = System.nanoTime();
+        System.out.println("HashMap время выполнения get: " + (endTime - startTime) + " нс.");
+
+        startTime = System.nanoTime();
+        for (int i = 0; i < n; i++) {
+            hashMap.remove(i);
+        }
+        endTime = System.nanoTime();
+        System.out.println("HashMap время выполнения remove: " + (endTime - startTime) + " нс.");
+
+        System.out.println("Сравнение производительности завершено.");
     }
 }

@@ -20,8 +20,8 @@ public class CustomHashMapTest {
         assertEquals(1, map.getSize());
         assertEquals(1, map.get("one"));
 
-        assertEquals(1, map.put("one", 11)); // возвращается старое значение
-        assertEquals(1, map.getSize());
+        assertEquals(1, map.put("one", 11)); //Возвращается старое значение.
+        assertEquals(1, map.getSize()); //Размер не меняется, потому что ключ "one" уже существует.
         assertEquals(11, map.get("one"));
     }
 
@@ -44,7 +44,7 @@ public class CustomHashMapTest {
         assertEquals(100, map.get(null));
         assertEquals(1, map.getSize());
 
-        assertEquals(100, map.put(null, 200)); // возвращает старое значение
+        assertEquals(100, map.put(null, 200));
         assertEquals(200, map.get(null));
     }
 
@@ -69,5 +69,35 @@ public class CustomHashMapTest {
         assertEquals(20, map.get("b"));
         assertEquals(30, map.get("c"));
         assertEquals(3, map.getSize());
+    }
+
+    @Test
+    void testRemove() {
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+
+        // Удаление существующего ключа
+        assertEquals(1, map.remove("one"));
+        assertNull(map.get("one"));
+        assertEquals(2, map.getSize());
+
+        // Удаление несуществующего ключа
+        assertNull(map.remove("nonexistent"));
+
+        // Удаление оставшихся элементов
+        assertEquals(2, map.remove("two"));
+        assertEquals(3, map.remove("three"));
+        assertEquals(0, map.getSize());
+    }
+
+    @Test
+    void testRemoveNullKey() {
+        map.put(null, 100);
+
+        // Удаление null-ключа
+        assertEquals(100, map.remove(null));
+        assertNull(map.get(null));
+        assertEquals(0, map.getSize());
     }
 }

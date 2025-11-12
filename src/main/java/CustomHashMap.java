@@ -58,4 +58,31 @@ public class CustomHashMap<K, V> {
         }
         return null;
     }
+
+    public V remove(K key) {
+        int index = indexFor(key);
+        Entry<K, V> current = table[index];
+        Entry<K, V> previous = null;
+
+        // Проходим по связанному списку
+        while (current != null) {
+            K existingKey = current.getKey();
+            if (key == null ? existingKey == null : key.equals(existingKey)) {
+                // Ключ найден — удаляем элемент
+                if (previous == null) {
+                    // Если элемент в начале списка
+                    table[index] = current.getNext();
+                } else {
+                    // Если элемент не в начале
+                    previous.setNext(current.getNext());
+                }
+                size--;
+                return current.getValue(); // Возвращаем старое значение
+            }
+            previous = current;
+            current = current.getNext();
+        }
+
+        return null; // Ключ не найден
+    }
 }

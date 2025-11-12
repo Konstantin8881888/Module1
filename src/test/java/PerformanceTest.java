@@ -41,4 +41,28 @@ public class PerformanceTest {
         assertEquals(25, map.get("key25")); //Не меняли
         assertEquals(100, map.getSize());
     }
+
+    @Test
+    void testLargeDatasetWithResize() {
+        CustomHashMap<Integer, String> map = new CustomHashMap<>();
+        int count = 1000; // Достаточно для вызова resize несколько раз
+
+        for (int i = 0; i < count; i++) {
+            map.put(i, "Value" + i);
+        }
+
+        assertEquals(count, map.getSize());
+
+        for (int i = 0; i < count; i++) {
+            assertEquals("Value" + i, map.get(i));
+        }
+
+        // Remove all
+        for (int i = 0; i < count; i++) {
+            assertEquals("Value" + i, map.remove(i));
+        }
+
+        assertEquals(0, map.getSize());
+        assertTrue(map.isEmpty());
+    }
 }

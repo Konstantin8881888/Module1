@@ -22,7 +22,8 @@ public class CustomHashMap<K, V> {
     private int indexFor(K key) {
         if (key == null) return 0;
         int hash = key.hashCode();
-        return Math.abs(hash % capacity);
+        // Более безопасное вычисление, избегает проблем с Integer.MIN_VALUE
+        return (hash & 0x7fffffff) % capacity; //Пусть так, оставлю такую логику, но правильно было бы двоичным сдвигом.
     }
 
     public V put(K key, V value) {
@@ -47,16 +48,18 @@ public class CustomHashMap<K, V> {
     }
 
     private void resize() {
+        int oldCapacity = capacity;
         capacity *= 2;
         List<LinkedList<Entry<K, V>>> newTable = new ArrayList<>(capacity);
         for (int i = 0; i < capacity; i++) {
             newTable.add(new LinkedList<>());
         }
 
-        // Перехеширование всех элементов
+        // Перехеширование всех элементов с новой capacity
         for (LinkedList<Entry<K, V>> bucket : table) {
             for (Entry<K, V> entry : bucket) {
-                int newIndex = indexFor(entry.getKey());
+                K key = entry.getKey();
+                int newIndex = indexFor(key); // Используем существующий метод
                 newTable.get(newIndex).add(entry);
             }
         }
